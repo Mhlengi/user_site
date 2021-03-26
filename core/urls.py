@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from django.urls import path, include
 from rest_framework import routers
 
-from core.views_api import UserViewSet
+from core.views_api import UserViewSet, ObtainAuthToken
 
 User = get_user_model()
 
@@ -13,5 +13,6 @@ router.register(r'users', UserViewSet)
 # Additionally, we include login URLs for the browsable API.
 urlpatterns = [
     path('api/v1/', include(router.urls)),
+    path('api-obtain-token/', ObtainAuthToken.as_view(), name='api-obtain-token'),
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework'))
 ]
