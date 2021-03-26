@@ -1,10 +1,12 @@
 from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import viewsets, renderers, parsers, status
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
+from core.filters import UserFilterSet
 from core.serializers import UserSerializer
 
 User = get_user_model()
@@ -13,6 +15,8 @@ User = get_user_model()
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = UserFilterSet
 
 
 class ObtainAuthToken(APIView):
