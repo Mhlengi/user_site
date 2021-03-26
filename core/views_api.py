@@ -1,7 +1,7 @@
+from django.contrib.auth import authenticate
 from django.contrib.auth import get_user_model
-from rest_framework import viewsets, renderers, parsers
+from rest_framework import viewsets, renderers, parsers, status
 from rest_framework.authtoken.models import Token
-from rest_framework.authtoken.serializers import AuthTokenSerializer
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
@@ -22,11 +22,13 @@ class ObtainAuthToken(APIView):
     renderer_classes = (renderers.JSONRenderer,)
 
     def post(self, request):
-        serializer = AuthTokenSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        user = serializer.validated_data['user']
+        email = request.data['email'] if 'email' in request.data else None
+        password = request.data['password'] if 'password' in request.data else None
 
-        Token.objects.filter(user=request.user).delete()
-        token, created = Token.objects.create(user=user)
+        user = authenticate(email=email, password=password)
+        if user is None or user.is_anonymous:
+            return Response({'token': ''}, status=status.HTTP_401_UNAUTHORIZED)
 
+        Token.objects.filter(user=user).delete()
+        token, created = Token.objects.get_or_create(user=user)
         return Response({'token': token.key})
