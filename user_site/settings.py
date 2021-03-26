@@ -40,7 +40,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework.authtoken',
-    'cuser',
+    # 'cuser',
 
     'core',
 ]
@@ -126,7 +126,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 # User custom model
-AUTH_USER_MODEL = 'cuser.CUser'
+# AUTH_USER_MODEL = 'cuser.CUser'
+AUTH_USER_MODEL = 'core.CustomUser'
 
 # Rest framework
 REST_FRAMEWORK = {

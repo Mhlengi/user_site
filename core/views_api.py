@@ -27,7 +27,8 @@ class ObtainAuthToken(APIView):
 
         user = authenticate(email=email, password=password)
         if user is None or user.is_anonymous:
-            return Response({'token': ''}, status=status.HTTP_401_UNAUTHORIZED)
+            data = {'detail': 'User not authentication.'}
+            return Response(data, status=status.HTTP_401_UNAUTHORIZED)
 
         Token.objects.filter(user=user).delete()
         token, created = Token.objects.get_or_create(user=user)
